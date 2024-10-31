@@ -47,20 +47,24 @@ function rewindVideo(seconds) {
 
 // Avançar vídeo
 function forwardVideo(seconds) {
-    video.currentTime = Math.min(video.duration, video.currentTime + seconds);
+    video.currentTime = Math.min(video.duration || 0, video.currentTime + seconds);
 }
 
 // Atualiza barra de progresso e tempo
 function updateProgress() {
-    seekBar.value = (video.currentTime / video.duration) * 100;
-    const minutes = Math.floor(video.currentTime / 60);
-    const seconds = Math.floor(video.currentTime % 60).toString().padStart(2, '0');
-    timeDisplay.textContent = `${minutes}:${seconds}`;
+    if (!isNaN(video.duration)) {
+        seekBar.value = (video.currentTime / video.duration) * 100;
+        const minutes = Math.floor(video.currentTime / 60);
+        const seconds = Math.floor(video.currentTime % 60).toString().padStart(2, '0');
+        timeDisplay.textContent = `${minutes}:${seconds}`;
+    }
 }
 
 // Permite buscar na linha do tempo
 function seekVideo() {
-    video.currentTime = (seekBar.value / 100) * video.duration;
+    if (!isNaN(video.duration)) {
+        video.currentTime = (seekBar.value / 100) * video.duration;
+    }
 }
 
 // Controla mudo
@@ -89,19 +93,21 @@ resetMouseMoveTimeout();
 
 async function loadVideo() {
     try {
-        // Solicita o link de vídeo com token do servidor
-        const response = await fetch('/api/getVideoLink');
+        const response = await fetch('http://127.0.0.1:5000/getVideoLink');
         const data = await response.json();
-
-        // Atualiza o player com o link obtido
-        const videoPlayer = document.getElementById('videoPlayer');
-        videoPlayer.src = data.videoUrl;
-        videoPlayer.load();
-        videoPlayer.play();
+        
+        if (data.videoUrl) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = data.videoUrl;  // Atualiza o link do vídeo
+            videoPlayer.load();
+            videoPlayer.play();
+        } else {
+            console.error("Erro: Link do vídeo não encontrado.");
+        }
     } catch (error) {
         console.error("Erro ao carregar o vídeo:", error);
     }
 }
 
-// Carrega o vídeo quando a página for carregada
+// Carrega o vídeo ao iniciar a página
 window.onload = loadVideo;
