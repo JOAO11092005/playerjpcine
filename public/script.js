@@ -87,12 +87,10 @@ seekBar.addEventListener('input', seekVideo);
 // Inicia o monitoramento do movimento do mouse
 resetMouseMoveTimeout();
 
-
-
 async function loadVideo() {
     try {
         // Solicita o link de vídeo com token do servidor
-        const response = await fetch('/getVideoLink');
+        const response = await fetch('/api/getVideoLink');
         const data = await response.json();
 
         // Atualiza o player com o link obtido

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { response } = require('express');
 
 module.exports = async (req, res) => {
     try {
@@ -12,3 +13,4 @@ module.exports = async (req, res) => {
         res.status(500).json({ error: 'Não foi possível obter o link do vídeo' });
     }
 };
+console.log(response);
