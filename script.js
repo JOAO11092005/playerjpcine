@@ -3,7 +3,6 @@ const playPauseBtn = document.getElementById('playPauseBtn');
 const timeDisplay = document.getElementById('videoTime');
 const seekBar = document.getElementById('videoSeek');
 const muteIcon = document.getElementById('muteIcon');
-const fullscreenIcon = document.getElementById('fullscreenIcon');
 const videoContainer = document.getElementById('videoContainer');
 const videoControls = document.querySelector('.video-controls');
 
@@ -77,10 +76,8 @@ function toggleMute() {
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         videoContainer.requestFullscreen();
-        fullscreenIcon.className = 'fas fa-compress';
     } else {
         document.exitFullscreen();
-        fullscreenIcon.className = 'fas fa-expand';
     }
 }
 
@@ -91,22 +88,12 @@ seekBar.addEventListener('input', seekVideo);
 // Inicia o monitoramento do movimento do mouse
 resetMouseMoveTimeout();
 
-async function loadVideo() {
-    try {
-        const response = await fetch('http://127.0.0.1:5000/getVideoLink');
-        const data = await response.json();
-        
-        if (data.videoUrl) {
-            const videoPlayer = document.getElementById('videoPlayer');
-            videoPlayer.src = data.videoUrl;  // Atualiza o link do vídeo
-            videoPlayer.load();
-            videoPlayer.play();
-        } else {
-            console.error("Erro: Link do vídeo não encontrado.");
-        }
-    } catch (error) {
-        console.error("Erro ao carregar o vídeo:", error);
-    }
+// Defina o link do vídeo diretamente
+function loadVideo() {
+    const videoUrl = "https://jpcinefilmes.b-cdn.net/Rambo%20III%20Dublado%20%C3%81lamo.mp4";
+    video.src = videoUrl;
+    video.load();
+    video.play().catch(error => console.error("Erro ao iniciar o vídeo:", error));
 }
 
 // Carrega o vídeo ao iniciar a página
